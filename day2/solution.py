@@ -27,37 +27,42 @@ lose = {
 
 # C > B > A > C
 
-def first_part(f):
+def first_part(opponent, you):
   total = 0
-  for line in f.readlines():
-    opponent, you = line.strip().split()
-    you = mapper.get(you)
-    total += shape.get(you)
-
-    if opponent == you:
-      total += 3
-    elif opponent == "C" and you == "A":
-      total += 6
-    elif opponent == "B" and you == "C":
-      total += 6
-    elif opponent == "A" and you == "B":
-      total += 6
-  return total
-
-def second_part(f):
-  total = 0
-  for line in f.readlines():
-    opponent, you = line.strip().split()
-    if you == "X":
-      total += shape[lose[opponent]]
-    elif you == "Y":
-      total += 3
-      total += shape.get(opponent)
-    elif you == "Z":
-      total += 6
-      total += shape[win[opponent]]
+  you = mapper[you]
+  total += shape[you]
+  
+  if opponent == you:
+    total += 3
+  elif you == win[opponent]:
+    total += 6
   
   return total
 
-# print(first_part(f))
-print(second_part(f))
+def second_part(opponent, you):
+  total = 0
+  
+  if you == "X":
+    total += shape[lose[opponent]]
+  elif you == "Y":
+    total += 3
+    total += shape.get(opponent)
+  elif you == "Z":
+    total += 6
+    total += shape[win[opponent]]
+  
+  return total
+
+total_1 = 0
+total_2 = 0
+
+for line in f.readlines():
+  opponent, you = line.strip().split()
+
+  total_1 += first_part(opponent, you)
+  total_2 += second_part(opponent, you)
+
+print("First:", total_1)
+print("Second:", total_2)
+
+f.close()

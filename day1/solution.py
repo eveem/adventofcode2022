@@ -14,7 +14,7 @@ for line in f.readlines():
 
 carries.append(total)
 carries.sort()
-print(carries[-1])
-print(sum(carries[-3:]))
+print("First:", carries[-1])
+print(sum("Second:", carries[-3:]))
 
 f.close()
