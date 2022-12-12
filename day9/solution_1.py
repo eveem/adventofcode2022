@@ -1,6 +1,6 @@
 import copy
 
-# f = open("small_input.txt")
+# f = open("small_input_1.txt")
 f = open("input.txt")
 
 prev = {"row": 0, "col": 0}
