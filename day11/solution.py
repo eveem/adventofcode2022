@@ -15,8 +15,8 @@ class Monkey:
   def debug(self):
     print(self.items, self.total)
 
-f = open("small_input.txt")
-# f = open("input.txt")
+# f = open("small_input.txt")
+f = open("input.txt")
 
 monkeys = defaultdict(int)
 id = 0
@@ -53,12 +53,22 @@ for line in f.readlines():
 
 monkeys[id] = Monkey(items, op, num, divisor, tid, fid)
 
-for i in range(20):
+# r = 20
+r = 10000
+
+lcm = 1
+for id in monkeys.keys():
+  lcm *= monkeys[id].divisor
+
+for i in range(r):
   for id in monkeys.keys():
     while monkeys[id].items:
       item = monkeys[id].items.pop(0)
       item = monkeys[id].operate(item)
-      item //= 3
+      if r == 20:
+        item //= 3
+      else:
+        item %= lcm
       monkeys[id].total += 1
       if item % monkeys[id].divisor == 0:
         monkeys[monkeys[id].tid].items.append(item)
