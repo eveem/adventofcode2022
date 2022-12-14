@@ -1,7 +1,7 @@
 from collections import deque
 
-f = open("small_input.txt")
-# f = open("input.txt")
+# f = open("small_input.txt")
+f = open("input.txt")
 
 grid = []
 
@@ -23,17 +23,31 @@ for i in range(m):
       start_y = j
       grid[i][j] = "a"
 
-q = deque([(start_x, start_y, 0)])
-visited = set([(start_x, start_y)])
+def bfs(start_x, start_y):
+  q = deque([(start_x, start_y, 0)])
+  visited = set([(start_x, start_y)])
 
-while q:
-  x, y, step = q.popleft()
-  if x == target_x and y == target_y:
-    print(step)
-    break
-    
-  for dx, dy in [[0, 1], [0, -1], [1, 0], [-1, 0]]:
-    if 0 <= dx + x < m and 0 <= dy + y < n and (dx + x, dy + y) not in visited:
-      if ord(grid[dx + x][dy + y]) - ord(grid[x][y]) <= 1:
-        q.append((dx + x, dy + y, step + 1))
-        visited.add((dx + x, dy + y))
+  while q:
+    x, y, step = q.popleft()
+    if x == target_x and y == target_y:
+      return step
+      
+    for dx, dy in [[0, 1], [0, -1], [1, 0], [-1, 0]]:
+      if 0 <= dx + x < m and 0 <= dy + y < n and (dx + x, dy + y) not in visited:
+        if ord(grid[dx + x][dy + y]) - ord(grid[x][y]) <= 1:
+          q.append((dx + x, dy + y, step + 1))
+          visited.add((dx + x, dy + y))
+
+print("PART 1:", bfs(start_x, start_y))
+
+res = float("inf")
+
+for i in range(m):
+  for j in range(n):
+    if grid[i][j] == "a":
+      t = bfs(i, j)
+      
+      if t is not None:
+        res = min(t, res)
+
+print("PART 2:", res)
