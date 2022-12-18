@@ -1,4 +1,6 @@
+from tracemalloc import start
 from termcolor import colored
+import copy
 
 # f = open("small_input.txt")
 f = open("input.txt")
@@ -50,7 +52,8 @@ for path in paths:
     prev_x = curr_x
     prev_y = curr_y
 
-# grid[0][500 - min_x] = "+"
+start_map = copy.deepcopy(grid)
+
 def drop(x, y):
   visited.add((x, y))
   d.append((x, y))
@@ -76,14 +79,65 @@ while True:
     break
   step += 1
 
-for i in range(m):
-  for j in range(n):
-    if grid[i][j] == "o":
-      print(colored(grid[i][j], "red"), end="")
-    elif grid[i][j] == "#":
-      print(colored(grid[i][j], "green"), end="")
-    else:
-      print(grid[i][j], end="")
-  print()
+def show(matrix):
+  m = len(matrix)
+  n = len(matrix[0])
+  for i in range(m):
+    for j in range(n):
+      if matrix[i][j] == "o":
+        print(colored(matrix[i][j], "red"), end="")
+      elif matrix[i][j] == "#":
+        print(colored(matrix[i][j], "green"), end="")
+      else:
+        print(matrix[i][j], end="")
+    print()
 
+# show(grid)
 print("PART 1:", step)
+
+offset = 500
+# show(start_map)
+for i in range(m):
+  start_map[i] = ["." for _ in range(offset)] + start_map[i] + ["." for _ in range(offset)]
+
+n = len(start_map[0])
+
+start_map.append(["." for _ in range(n)])
+start_map.append(["#" for _ in range(n)])
+# show(start_map)
+m = len(start_map)
+
+def drop_2(x, y):
+  visited.add((x, y))
+  d.append((x, y))
+
+  if x + 1 < m:
+    if (x + 1, y) not in visited and start_map[x + 1][y] == ".":
+      drop_2(x + 1, y)
+    elif start_map[x + 1][y] in "o#":
+      if y - 1 >= 0 and (x + 1, y - 1) not in visited and start_map[x + 1][y - 1] == ".":
+        drop_2(x + 1, y - 1)
+      elif y + 1 < n and (x + 1, y + 1) not in visited and start_map[x + 1][y + 1] == ".":
+        drop_2(x + 1, y + 1)
+
+step = 0
+prev_x = False
+prev_y = False
+
+while True:
+  visited = set()
+  d = []
+  drop_2(0, 500 - min_x + offset)
+  cx, cy = d[-1]
+  if prev_x == cx and prev_y == cy:
+    break
+  
+  if cx + 1 < m and start_map[cx + 1][cy] in "o#" and cy - 1 >= 0 and start_map[cx + 1][cy - 1] in "o#" and cy + 1 < n and start_map[cx + 1][cy + 1] in "o#":
+    start_map[cx][cy] = "o"
+  
+  step += 1
+  prev_x = cx
+  prev_y = cy
+
+# show(start_map)
+print("PART 2:", step)
