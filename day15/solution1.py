@@ -9,6 +9,8 @@ distance = defaultdict(int)
 
 min_x = float("inf")
 max_x = float("-inf")
+min_y = float("inf")
+max_y = float("-inf")
 
 for line in f.readlines():
   line = line.strip()
@@ -22,13 +24,14 @@ for line in f.readlines():
   
   min_x = min(min_x, sx)
   max_x = max(max_x, sx)
+  min_y = min(min_y, sy)
+  max_y = max(max_y, sy)
 
 md = max(distance.values())  
 valid = set()
-# fy = 10
-fy = 2_000_000
 
-# print(min_x - md, max_x + md)
+fy = 10
+# fy = 2_000_000
 
 for i in range(min_x - md, max_x + md):
   for sx, sy in sensors:
